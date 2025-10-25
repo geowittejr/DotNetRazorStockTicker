@@ -1,4 +1,4 @@
-# Dot Net Razor StockTicker (ASP.NET Core Razor Pages)
+# Dot Net Razor Stock Ticker (ASP.NET Core Razor Pages)
 A sample ASP.NET Core Razor Pages application that displays live stock ticker data using a third-party Stock API.  
 This repository also includes a supporting Services class library for API integration and an xUnit test project for unit testing the application logic.
 
@@ -7,17 +7,17 @@ This repository also includes a supporting Services class library for API integr
 ## Project Structure
 
 ```
-StockTickerDashboard/
+DotNetRazorStockTicker/
 │
 ├── src/
 │   ├── StockTickerRazorApp/          # Main Razor Pages application
 │   ├── StockTickerServices/ # Services library (API integration, business logic)
 │
 ├── tests/
-│   ├── StockTickerDashboard.Tests/    # xUnit test project
+│   ├── StockTickerTests/    # xUnit test project
 │
 ├── .gitignore
-├── StockTickerDashboard.sln
+├── DotNetRazorStockTicker.sln
 └── README.md
 ```
 
@@ -29,7 +29,7 @@ StockTickerDashboard/
 - Integration with a third-party Stock Ticker API  
 - Configurable API key management via `appsettings.json` or environment variables  
 - Dependency injection for modular service design  
-- Unit tests (xUnit + Moq) for core business logic  
+- Unit tests (xUnit) for core business logic  
 
 ---
 
@@ -39,7 +39,7 @@ Make sure you have the following installed:
 
 - .NET 8 SDK
 - Visual Studio 2022 or VS Code
-- A valid API key for the stock ticker service (e.g., Financial Modeling Prep, Alpha Vantage, etc.)
+- A valid API key for the stock ticker service (Finnhub)
 
 ---
 
@@ -48,8 +48,8 @@ Make sure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/StockTickerDashboard.git
-cd StockTickerDashboard
+git clone https://github.com/geowittejr/DotNetRazorStockTicker.git
+cd DotNetRazorStockTicker
 ```
 
 ### 2. Configure the API Key
@@ -72,7 +72,7 @@ export STOCK_API_KEY="your_api_key_here"
 
 #### Option 2 — appsettings.Development.json
 
-In `src/StockTickerDashboard/appsettings.Development.json`, add:
+In `src/StockTickerRazorApp/appsettings.Development.json`, add:
 ```json
 {
   "StockApi": {
@@ -90,7 +90,7 @@ Note: Do not commit your API key. Ensure it’s excluded via `.gitignore`.
 
 ```bash
 dotnet build
-dotnet run --project src/StockTickerDashboard
+dotnet run --project src/StockTickerRazorApp
 ```
 
 Then open your browser and navigate to:
@@ -119,10 +119,10 @@ Passed!  - Failed: 0, Passed: 12, Skipped: 0, Total: 12
 
 ## Services Library Overview
 
-The `StockTickerDashboard.Services` project includes:
+The `StockTickerServices` project includes:
 
-- `IStockService` – defines the contract for fetching stock data  
-- `StockService` – implements API integration and data mapping  
+- `IStockTickerService` – defines the contract for fetching stock data  
+- `StockTickerService` – implements API integration and data mapping  
 - `Models/` – contains domain models used across layers  
 - `HttpClient` – registered in `Program.cs` via DI for the stock API  
 
@@ -139,7 +139,6 @@ The `StockTickerDashboard.Services` project includes:
 
 ## Local Development Notes
 
-- Supports hot reload during development.  
 - Logs output to console with configurable log levels.  
 - Mocked services available for testing without hitting live APIs.  
 
@@ -148,30 +147,3 @@ The `StockTickerDashboard.Services` project includes:
 ## License
 
 This project is licensed under the MIT License.
-
----
-
-## Contributing
-
-1. Fork the repository  
-2. Create a feature branch:  
-   ```bash
-   git checkout -b feature/my-feature
-   ```
-3. Commit changes:  
-   ```bash
-   git commit -m "Added new feature"
-   ```
-4. Push to branch:  
-   ```bash
-   git push origin feature/my-feature
-   ```
-5. Open a Pull Request  
-
----
-
-## Contact
-
-George F. Witte, Jr.  
-LinkedIn: https://www.linkedin.com/in/geowittejr/  
-Email: geowittejr@gmail.com
