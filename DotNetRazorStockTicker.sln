@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTickerServices", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTickerTests", "tests\StockTickerTests\StockTickerTests.csproj", "{97B5794C-68E7-4F45-83EF-30B0724D5164}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTickerData", "src\StockTickerData\StockTickerData.csproj", "{93BCB8A8-4C23-4F1C-B8E8-CFF764037959}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppDataModels", "src\StockTickerData\AppDataModels.csproj", "{93BCB8A8-4C23-4F1C-B8E8-CFF764037959}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockTickerData.ConfigOptions
+namespace AppDataModels.Config
 {
     public class StockQuotesOptions
     {

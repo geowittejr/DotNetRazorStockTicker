@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StockTickerData\StockTickerData.csproj" />
+    <ProjectReference Include="..\StockTickerData\AppDataModels.csproj" />
   </ItemGroup>
 
 </Project>

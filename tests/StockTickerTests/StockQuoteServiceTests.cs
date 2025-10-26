@@ -1,7 +1,6 @@
-using Castle.Core.Logging;
 using Microsoft.Extensions.Options;
-using StockTickerData.ConfigOptions;
 using StockTickerServices.Quotes;
+using AppDataModels.Config;
 
 namespace StockTickerTests
 {

@@ -1,12 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using StockTickerData.Models;
+﻿using AppDataModels.DomainModels;
+using Microsoft.Extensions.Logging;
 using StockTickerServices.Caching;
 using StockTickerServices.Quotes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTickerServices
 {

@@ -1,4 +1,5 @@
-using StockTickerData.ConfigOptions;
+using AppDataModels.Config;
+using AppDataModels.DomainModels;
 using StockTickerServices;
 using StockTickerServices.Caching;
 using StockTickerServices.Quotes;

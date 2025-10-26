@@ -1,4 +1,4 @@
-﻿using StockTickerData.Models;
+﻿using AppDataModels.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
