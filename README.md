@@ -4,6 +4,14 @@ This repository also includes a supporting Services class library for API integr
 
 ---
 
+## Assumptions
+
+- The stock exchange code for all Finnhub symbol lookup requests is "US" for US exchanges (NYSE, Nasdaq).
+- The Finnhub "epsTTM" metric value is the last reported eps for a given stock symbol.
+- The Finnhub "peTTM" metric value is the last reported pe value for a given stock symbol.
+
+---
+
 ## Project Structure
 
 ```
