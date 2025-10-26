@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StockTickerData\AppDataModels.csproj" />
-    <ProjectReference Include="..\StockTickerServices\AppServices.csproj" />
+    <ProjectReference Include="..\AppData\AppDataModels.csproj" />
+    <ProjectReference Include="..\AppServices\AppServices.csproj" />
   </ItemGroup>
 
 </Project>
