@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using AppDataModels.Config;
 using AppDataModels.DomainModels;
+using AppDataModels.Utility;
 
 namespace AppServices.Quotes
 {
@@ -20,9 +21,9 @@ namespace AppServices.Quotes
             _logger = logger;
             _httpClientFactory = httpClientFactory;
         }
-        public async Task<StockTicker> GetStockTickerAsync(string stockSymbol)
+        public async Task<Result<StockTicker>> GetStockTickerAsync(string stockSymbol)
         {
-            return new StockTicker { CompanyName = "Mock Company", Symbol = stockSymbol };
+            return Result<StockTicker>.Success(new StockTicker { CompanyName = "Mock Company", Symbol = stockSymbol });
         }
 
         private async Task LookupSymbolAsync(string symbol)

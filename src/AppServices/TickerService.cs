@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using AppServices.Caching;
 using AppServices.Quotes;
+using AppDataModels.Utility;
 
 namespace AppServices
 {
@@ -21,24 +22,27 @@ namespace AppServices
             _tickerCache = tickerCache;
         }
 
-        public Task<List<StockTicker>> GetStockTickersAsync(List<string> stockSymbols)
+        public async Task<Result<List<StockTicker>>> GetStockTickersAsync(List<string> stockSymbols)
         {
             var tasks = stockSymbols.Select(symbol => GetStockTickerAsync(symbol));
 
-            return Task.WhenAll(tasks).ContinueWith(t => t.Result.ToList());
+            var res = Task.WhenAll(tasks).ContinueWith(t => t.Result.ToList());
+
+            return Result<List<StockTicker>>.Failure(new ResultError("500", "failed"));
         }
 
-        private async Task<StockTicker> GetStockTickerAsync(string symbol)
+        private async Task<Result<StockTicker>> GetStockTickerAsync(string symbol)
         {
-
             var cachedTicker = _tickerCache.GetStockTicker(symbol);
             if (cachedTicker != null)
             {
                 _logger.LogInformation("Cache hit for symbol: {Symbol}", symbol);
-                return cachedTicker;
+                return Result<StockTicker>.Success(cachedTicker);
             }
 
-            return await _stockQuoteService.GetStockTickerAsync(symbol);
+            var res = await _stockQuoteService.GetStockTickerAsync(symbol);
+
+            return Result<StockTicker>.Success(res.Value!);
         }
     }
 }

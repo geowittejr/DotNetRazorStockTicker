@@ -21,17 +21,17 @@ namespace AppTests
         }
 
         [Fact]
-        public void StockQuoteService_DoSomething_ShouldNotThrowAnException()
+        public async Task StockQuoteService_GetStockTickerAsync_ShouldNotThrowAnException()
         {
             var service = GetStockQuoteService();
 
             try
             {
-                service.DoSomething();
+                await service.GetStockTickerAsync("AAPL");
             }
             catch (Exception ex)
             {
-                Assert.Fail("DoSomething should not throw an exception.");
+                Assert.Fail("Method should not throw an exception.");
             }
 
             Assert.True(true);
