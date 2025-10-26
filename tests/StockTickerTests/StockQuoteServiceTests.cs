@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 using AppServices.Quotes;
 using AppDataModels.Config;
 
-namespace StockTickerTests
+namespace AppTests
 {
     public class StockQuoteServiceTests
     {
