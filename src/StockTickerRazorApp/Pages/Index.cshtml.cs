@@ -1,24 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StockTickerServices.Quotes;
+using StockTickerServices;
 
 namespace StockTickerRazorApp.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IStockQuoteService _stockQuoteService;
+        private readonly ITickerService _tickerService;
 
-        public IndexModel(ILogger<IndexModel> logger, IStockQuoteService stockQuoteService)
+        public IndexModel(ILogger<IndexModel> logger, ITickerService tickerService)
         {
             _logger = logger;
-            _stockQuoteService = stockQuoteService;
+            _tickerService = tickerService;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             _logger.LogInformation("Index page visited.");
-            _stockQuoteService.DoSomething();
+            await _tickerService.GetStockTickersAsync([null]);
         }
     }
 }

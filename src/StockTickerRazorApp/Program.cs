@@ -1,4 +1,6 @@
 using StockTickerData.ConfigOptions;
+using StockTickerServices;
+using StockTickerServices.Caching;
 using StockTickerServices.Quotes;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +13,10 @@ builder.Services.Configure<StockQuotesOptions>(
     builder.Configuration.GetSection(StockQuotesOptions.SectionName)
 );
 
-// Register StockQuoteService
+// Register services
 builder.Services.AddScoped<IStockQuoteService, StockQuoteService>();
+builder.Services.AddScoped<ITickerService, TickerService>();
+builder.Services.AddScoped<ITickerCache, TickerCache>();
 
 // Ensure we make IHttpClientFactory available for services that need it
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0
