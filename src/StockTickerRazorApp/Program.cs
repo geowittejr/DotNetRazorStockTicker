@@ -1,5 +1,4 @@
 using AppDataModels.Config;
-using AppDataModels.DomainModels;
 using AppServices;
 using AppServices.Caching;
 using AppServices.Quotes;

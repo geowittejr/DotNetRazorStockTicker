@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace StockTickerRazorApp.Pages
+namespace RazorApp.Pages
 {
     public class PrivacyModel : PageModel
     {
