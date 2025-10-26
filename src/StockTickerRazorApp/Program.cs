@@ -12,7 +12,7 @@ builder.Services.Configure<StockQuotesOptions>(
 );
 
 // Register StockQuoteService
-builder.Services.AddScoped<StockQuoteService, StockQuoteService>();
+builder.Services.AddScoped<IStockQuoteService, StockQuoteService>();
 
 // Ensure we make IHttpClientFactory available for services that need it
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0

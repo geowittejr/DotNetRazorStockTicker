@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace StockTickerServices.Quotes
 {
-    internal interface IStockQuoteService
+    public interface IStockQuoteService
     {
+        void DoSomething();
     }
 }
