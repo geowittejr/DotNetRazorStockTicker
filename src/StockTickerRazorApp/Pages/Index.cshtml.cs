@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StockTickerServices;
+using AppServices;
 
 namespace StockTickerRazorApp.Pages
 {

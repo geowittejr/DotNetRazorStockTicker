@@ -1,9 +1,9 @@
 ﻿using AppDataModels.DomainModels;
 using Microsoft.Extensions.Logging;
-using StockTickerServices.Caching;
-using StockTickerServices.Quotes;
+using AppServices.Caching;
+using AppServices.Quotes;
 
-namespace StockTickerServices
+namespace AppServices
 {
     public class TickerService : ITickerService
     {

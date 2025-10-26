@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using StockTickerServices.Quotes;
+using AppServices.Quotes;
 using AppDataModels.Config;
 
 namespace StockTickerTests

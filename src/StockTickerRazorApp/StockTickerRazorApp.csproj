@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StockTickerData\AppDataModels.csproj" />
-    <ProjectReference Include="..\StockTickerServices\StockTickerServices.csproj" />
+    <ProjectReference Include="..\StockTickerServices\AppServices.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using AppDataModels.Config;
 using AppDataModels.DomainModels;
 
-namespace StockTickerServices.Caching
+namespace AppServices.Caching
 {
     public class TickerCache : ITickerCache
     {

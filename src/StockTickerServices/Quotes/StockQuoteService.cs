@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using AppDataModels.Config;
 
-namespace StockTickerServices.Quotes
+namespace AppServices.Quotes
 {
     public class StockQuoteService : IStockQuoteService
     {

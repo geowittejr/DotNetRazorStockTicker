@@ -1,6 +1,6 @@
 ﻿using AppDataModels.DomainModels;
 
-namespace StockTickerServices
+namespace AppServices
 {
     public interface ITickerService
     {

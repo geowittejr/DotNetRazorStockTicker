@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace StockTickerServices.Quotes.Models
+namespace AppServices.Quotes.Models
 {
     public class SymbolLookupResponse
     {

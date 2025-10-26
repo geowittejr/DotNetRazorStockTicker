@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockTickerServices.Quotes
+namespace AppServices.Quotes
 {
     public interface IStockQuoteService
     {

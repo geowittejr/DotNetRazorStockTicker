@@ -1,8 +1,8 @@
 using AppDataModels.Config;
 using AppDataModels.DomainModels;
-using StockTickerServices;
-using StockTickerServices.Caching;
-using StockTickerServices.Quotes;
+using AppServices;
+using AppServices.Caching;
+using AppServices.Quotes;
 
 var builder = WebApplication.CreateBuilder(args);
 
