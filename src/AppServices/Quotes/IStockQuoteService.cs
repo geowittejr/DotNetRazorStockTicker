@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppDataModels.DomainModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace AppServices.Quotes
 {
     public interface IStockQuoteService
     {
-        void DoSomething();
+        Task<StockTicker> GetStockTickerAsync(string stockSymbol);
     }
 }

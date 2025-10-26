@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using AppDataModels.Config;
+using AppDataModels.DomainModels;
 
 namespace AppServices.Quotes
 {
@@ -19,13 +20,12 @@ namespace AppServices.Quotes
             _logger = logger;
             _httpClientFactory = httpClientFactory;
         }
-
-        public void DoSomething()
+        public async Task<StockTicker> GetStockTickerAsync(string stockSymbol)
         {
-            _logger.LogInformation("DoSomething called.");
+            return new StockTicker { CompanyName = "Mock Company", Symbol = stockSymbol };
         }
 
-        public async Task LookupSymbolAsync(string symbol)
+        private async Task LookupSymbolAsync(string symbol)
         {
             var client = _httpClientFactory.CreateClient();
 

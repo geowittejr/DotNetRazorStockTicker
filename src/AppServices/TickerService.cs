@@ -23,7 +23,22 @@ namespace AppServices
 
         public Task<List<StockTicker>> GetStockTickersAsync(List<string> stockSymbols)
         {
-            throw new NotImplementedException();
+            var tasks = stockSymbols.Select(symbol => GetStockTickerAsync(symbol));
+
+            return Task.WhenAll(tasks).ContinueWith(t => t.Result.ToList());
+        }
+
+        private async Task<StockTicker> GetStockTickerAsync(string symbol)
+        {
+
+            var cachedTicker = _tickerCache.GetStockTicker(symbol);
+            if (cachedTicker != null)
+            {
+                _logger.LogInformation("Cache hit for symbol: {Symbol}", symbol);
+                return cachedTicker;
+            }
+
+            return await _stockQuoteService.GetStockTickerAsync(symbol);
         }
     }
 }

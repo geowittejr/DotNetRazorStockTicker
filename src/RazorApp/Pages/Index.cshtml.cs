@@ -18,7 +18,7 @@ namespace RazorApp.Pages
         public async Task OnGetAsync()
         {
             _logger.LogInformation("Index page visited.");
-            await _tickerService.GetStockTickersAsync([null]);
+            //await _tickerService.GetStockTickersAsync([null]);
         }
     }
 }
