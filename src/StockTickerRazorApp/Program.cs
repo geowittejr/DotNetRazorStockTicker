@@ -1,7 +1,16 @@
+using StockTickerServices.Quotes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+// Register StockQuoteService
+builder.Services.AddScoped<StockQuoteService, StockQuoteService>();
+
+// Ensure we make IHttpClientFactory available for services that need it
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
