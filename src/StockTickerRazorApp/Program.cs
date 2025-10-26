@@ -1,9 +1,15 @@
+using StockTickerData.ConfigOptions;
 using StockTickerServices.Quotes;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+// Bind StockQuotesOptions from configuration
+builder.Services.Configure<StockQuotesOptions>(
+    builder.Configuration.GetSection(StockQuotesOptions.SectionName)
+);
 
 // Register StockQuoteService
 builder.Services.AddScoped<StockQuoteService, StockQuoteService>();

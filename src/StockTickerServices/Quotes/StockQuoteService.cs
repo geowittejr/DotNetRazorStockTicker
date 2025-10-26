@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using StockTickerData.ConfigOptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,9 +11,12 @@ namespace StockTickerServices.Quotes
 {
     public class StockQuoteService : IStockQuoteService
     {
+        private readonly StockQuotesOptions _options;
         private readonly IHttpClientFactory _httpClientFactory;
-        public StockQuoteService(IHttpClientFactory httpClientFactory) 
+
+        public StockQuoteService(IOptions<StockQuotesOptions> options, IHttpClientFactory httpClientFactory) 
         { 
+            _options = options.Value;
             _httpClientFactory = httpClientFactory;
         }
 
@@ -19,7 +24,7 @@ namespace StockTickerServices.Quotes
         {
             var client = _httpClientFactory.CreateClient();
 
-            var response = await client.GetAsync($"/api/v1/search?q={symbol}&token={{YOUR_API_KEY}}");
+            var response = await client.GetAsync($"{_options.BaseUrl}&token={_options.ApiKey}");
         }
     }
 }
