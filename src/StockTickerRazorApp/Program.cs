@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+// Add memory caching services.
+builder.Services.AddMemoryCache();
+
 // Bind StockQuotesOptions from configuration
 builder.Services.Configure<StockQuotesOptions>(
     builder.Configuration.GetSection(StockQuotesOptions.SectionName)
@@ -17,6 +20,14 @@ builder.Services.Configure<StockQuotesOptions>(
 builder.Services.AddScoped<IStockQuoteService, StockQuoteService>();
 builder.Services.AddScoped<ITickerService, TickerService>();
 builder.Services.AddScoped<ITickerCache, TickerCache>();
+
+
+/***************************
+ * 
+ * Exception Handling
+ * https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-8.0
+ * 
+ */
 
 // Ensure we make IHttpClientFactory available for services that need it
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0

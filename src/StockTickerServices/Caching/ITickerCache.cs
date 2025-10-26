@@ -9,8 +9,8 @@ namespace StockTickerServices.Caching
 {
     public interface ITickerCache
     {
-        Task CacheStockTickerAsync(StockTicker stockTicker, int expirationSeconds = 60);
-        Task<StockTicker?> GetStockTickerAsync(string stockSymbol);
-        Task RemoveStockTickerAsync(string stockSymbol);
+        void CacheStockTicker(StockTicker stockTicker);
+        StockTicker? GetStockTicker(string stockSymbol);
+        void RemoveStockTicker(string stockSymbol);
     }
 }
