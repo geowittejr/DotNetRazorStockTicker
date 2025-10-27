@@ -10,6 +10,12 @@ namespace AppServices.Quotes.Models
 {
     public class SymbolMetricsResponse
     {
+        [JsonProperty(PropertyName = "metric")]
+        public required SymbolMetric Metric { get; set; }
+    }
+
+    public class SymbolMetric
+    {
         [JsonProperty(PropertyName = "symbol")]
         public required string Symbol { get; set; }
         [JsonProperty(PropertyName = "epsTTM")]

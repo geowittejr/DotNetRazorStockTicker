@@ -4,7 +4,6 @@
     ViewData["Title"] = "Razor Stock Ticker";
 }
 <h1 class="display-4">Razor Stock Ticker</h1>
-<p>Enter a space-separated list of stock symbols to view quotes</p>
 <form id="quotesForm" method="post" asp-page-handler="GetStockTickers">
     <div class="form-group">
         <label for="symbols">Enter stock symbols (space-separated):</label>
@@ -34,6 +33,7 @@
                 <th>Price</th>
                 <th>P/E Ratio</th>
                 <th>EPS</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -42,9 +42,10 @@
                 <tr>
                     <td>@ticker.Symbol</td>
                     <td>@ticker.CompanyName</td>
-                    <td>@ticker.Price</td>
-                    <td>@ticker.PriceToEarningsRatio</td>
-                    <td>@ticker.EarningsPerShare</td>
+                    <td>@ticker.Price.ToString("C2")</td>
+                    <td>@ticker.PriceToEarningsRatio.ToString("F2")</td>
+                    <td>@ticker.EarningsPerShare.ToString("F2")</td>
+                    <td>@ticker.ApiStatusCode</td>
                 </tr>
             }
         </tbody>

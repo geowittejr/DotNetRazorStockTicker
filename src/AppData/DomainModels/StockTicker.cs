@@ -13,5 +13,6 @@ namespace AppDataModels.DomainModels
         public decimal Price { get; set; }
         public decimal EarningsPerShare { get; set; }
         public decimal PriceToEarningsRatio { get; set; }
+        public string ApiStatusCode { get; set; } = "200";
     }
 }

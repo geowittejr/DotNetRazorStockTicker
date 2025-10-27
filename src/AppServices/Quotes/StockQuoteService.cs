@@ -6,6 +6,7 @@ using AppDataModels.Utility;
 using AppServices.Quotes.Models;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using AppServices.Quotes.Utility;
 
 namespace AppServices.Quotes
 {
@@ -35,82 +36,132 @@ namespace AppServices.Quotes
             await Task.WhenAll(lookupTask, quoteTask, metricsTask);
 
             // Now combine results
-            var company = await lookupTask; 
+            var lookup = await lookupTask; 
             var quote = await quoteTask;
             var metrics = await metricsTask;
 
             var stockTicker = new StockTicker
             {
                 Symbol = stockSymbol,
-                CompanyName = company.IsSuccess ? company.Value!.CompanyName : "N/A",
+                CompanyName = lookup.IsSuccess ? lookup.Value!.CompanyName : "N/A",
                 Price = quote.IsSuccess ? quote.Value!.Price : 0.00M,
-                EarningsPerShare = metrics.IsSuccess ? metrics.Value!.EarningsPerShare : 0.00M,
-                PriceToEarningsRatio = metrics.IsSuccess ? metrics.Value!.PriceToEarningsRatio : 0.00M
+                EarningsPerShare = metrics.IsSuccess ? metrics.Value!.Metric.EarningsPerShare : 0.00M,
+                PriceToEarningsRatio = metrics.IsSuccess ? metrics.Value!.Metric.PriceToEarningsRatio : 0.00M,
+                ApiStatusCode = GetApiStatusCode(lookup, quote, metrics)
             };
 
             return Result<StockTicker>.Success(stockTicker);
         }
 
-        private async Task<Result<SymbolLookupResponse>> LookupSymbolAsync(string symbol)
+        private string GetApiStatusCode(Result<SymbolLookupResult> lookupResult, Result<SymbolQuoteResponse> quoteResult, Result<SymbolMetricsResponse> metricsResult)
+        {
+            if (lookupResult.Error != null)
+                return lookupResult.Error.StatusCode;
+            if (quoteResult.Error != null)
+                return quoteResult.Error.StatusCode;
+            if (metricsResult.Error != null)
+                return metricsResult.Error.StatusCode;
+            return "200";
+        }
+
+        private async Task<Result<SymbolLookupResult>> LookupSymbolAsync(string symbol)
         {
             var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync($"{_options.BaseUrl}/search?q={symbol}&exchange=US&token={_options.ApiKey}");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            var obj = await GetObjectFromResponse<SymbolLookupResponse>(response);
-
-            if (obj != null)
+            SymbolLookupResponse? result = null;
+            try
             {
-                obj.Symbol = symbol;
-                return Result<SymbolLookupResponse>.Success(obj);
+                var response = await client.GetAsync($"{_options.BaseUrl}/search?q={symbol}&exchange=US&token={_options.ApiKey}");
+                
+                var resultError = response.GetResultErrorIfAny();
+                if (resultError != null)
+                    return Result<SymbolLookupResult>.Failure(resultError);
+
+                result = await response.DeserializeContentAsync<SymbolLookupResponse>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during symbol lookup for {Symbol}", symbol);
+                return Result<SymbolLookupResult>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}", ex));
+            }
+
+            if (result != null && result.Count > 0)
+            {
+                var resultSymbol = result.Results.FirstOrDefault(r => r.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
+                return Result<SymbolLookupResult>.Success(resultSymbol!);
             }
             else
             {
-                return Result<SymbolLookupResponse>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}"));
+                return Result<SymbolLookupResult>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}"));
             }
         }
 
         private async Task<Result<SymbolQuoteResponse>> GetSymbolQuoteAsync(string symbol)
         {
             var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync($"{_options.BaseUrl}/quote?symbol={symbol}&token={_options.ApiKey}");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            var obj = await GetObjectFromResponse<SymbolQuoteResponse>(response);
-
-            if (obj != null)
+            SymbolQuoteResponse? result = null;
+            try
             {
-                obj.Symbol = symbol;
-                return Result<SymbolQuoteResponse>.Success(obj);
+                var response = await client.GetAsync($"{_options.BaseUrl}/quote?symbol={symbol}&token={_options.ApiKey}");
+                
+                var resultError = response.GetResultErrorIfAny();
+                if (resultError != null)
+                    return Result<SymbolQuoteResponse>.Failure(resultError);
+
+                result = await response.DeserializeContentAsync<SymbolQuoteResponse>();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during quote request for {Symbol}", symbol);
+                return Result<SymbolQuoteResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}", ex));
+            }
+
+            if (result != null)
+            {
+                result.Symbol = symbol;
+                return Result<SymbolQuoteResponse>.Success(result);
             }
             else
             {
-                return Result<SymbolQuoteResponse>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}"));
+                return Result<SymbolQuoteResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}"));
             }
         }
 
         private async Task<Result<SymbolMetricsResponse>> GetSymbolMetricsAsync(string symbol)
         {
             var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync($"{_options.BaseUrl}/stock/metric?symbol={symbol}&metric=all&token={_options.ApiKey}");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            var obj = await GetObjectFromResponse<SymbolMetricsResponse>(response);
-
-            if (obj != null)
+            SymbolMetricsResponse? result = null;
+            try
             {
-                obj.Symbol = symbol;
-                return Result<SymbolMetricsResponse>.Success(obj);
+                var response = await client.GetAsync($"{_options.BaseUrl}/stock/metric?symbol={symbol}&metric=all&token={_options.ApiKey}");
+
+                var resultError = response.GetResultErrorIfAny();
+                if (resultError != null)
+                    return Result<SymbolMetricsResponse>.Failure(resultError);
+
+                result = await response.DeserializeContentAsync<SymbolMetricsResponse>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during quote request for {Symbol}", symbol);
+                return Result<SymbolMetricsResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}", ex));
+            }
+
+            if (result != null)
+            {
+                result.Metric.Symbol = symbol;
+                return Result<SymbolMetricsResponse>.Success(result);
             }
             else
             {
-                return Result<SymbolMetricsResponse>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}"));
+                return Result<SymbolMetricsResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}"));
             }
-        }
-
-        private async Task<T> GetObjectFromResponse<T>(HttpResponseMessage response)
-        {
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            var obj = JsonConvert.DeserializeObject<T>(json);
-            return obj!;
         }
     }
 }

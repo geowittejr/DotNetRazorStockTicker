@@ -5,6 +5,6 @@ namespace AppServices
 {
     public interface ITickerService
     {
-        Task<Result<List<StockTicker>>> GetStockTickersAsync(IEnumerable<string> stockSymbols);
+        Task<Result<IEnumerable<StockTicker>>> GetStockTickersAsync(IEnumerable<string> stockSymbols);
     }
 }

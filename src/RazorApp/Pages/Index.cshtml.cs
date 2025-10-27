@@ -24,21 +24,22 @@ namespace RazorApp.Pages
         [BindProperty]
         public string StockSymbolsInput { get; set; } = string.Empty;
 
-        public List<StockTicker> StockTickers { get; set; } = new();
+        public IEnumerable<StockTicker> StockTickers { get; set; } = [];
 
         public void OnGet()
         {
             // Add default values for testing
-            StockSymbolsInput = "AAPL GOOG MSFT";
+            StockSymbolsInput = "AAPL GOOG MSFT ABBV ABT ACN ADM AEE ADSK ADT CETX CERT FWRG LVO LUXE PSO TX TWIN ZION ZLAB";
+            //StockSymbolsInput = "AAPL GOOG MSFT";
         }
 
         public async Task OnPostGetStockTickers()
         {
             var symbols = ValidateAndReturnSymbolsInput();
 
-            Result<List<StockTicker>> res = await _tickerService.GetStockTickersAsync(symbols);
+            Result<IEnumerable<StockTicker>> res = await _tickerService.GetStockTickersAsync(symbols);
 
-            StockTickers = res.IsSuccess ? res.Value! : [];
+            StockTickers = res.IsSuccess ? res.Value! : []; 
 
             //foreach (var symbol in symbols)
             //{

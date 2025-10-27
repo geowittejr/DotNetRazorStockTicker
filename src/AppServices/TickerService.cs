@@ -22,7 +22,7 @@ namespace AppServices
             _tickerCache = tickerCache;
         }
 
-        public async Task<Result<List<StockTicker>>> GetStockTickersAsync(IEnumerable<string> stockSymbols)
+        public async Task<Result<IEnumerable<StockTicker>>> GetStockTickersAsync(IEnumerable<string> stockSymbols)
         {
             try
             {
@@ -32,24 +32,12 @@ namespace AppServices
                 // Await completion of all tasks
                 var results = await Task.WhenAll(tasks);
 
-                // Separate successes and failures
-                var successfulTickers = results
-                    .Where(r => r.IsSuccess && r.Value != null)
-                    .Select(r => r.Value!)
-                    .ToList();
-
-                if (successfulTickers.Count == 0)
-                {
-                    return Result<List<StockTicker>>.Failure(
-                        new ResultError("404", "No stock tickers could be retrieved"));
-                }
-
-                return Result<List<StockTicker>>.Success(successfulTickers);
+                return Result<IEnumerable<StockTicker>>.Success(results.Select(x => x.Value!));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching stock tickers");
-                return Result<List<StockTicker>>.Failure(
+                return Result<IEnumerable<StockTicker>>.Failure(
                     new ResultError("500", $"Unexpected error: {ex.Message}"));
             }
         }
@@ -66,9 +54,12 @@ namespace AppServices
             var res = await _stockQuoteService.GetStockTickerAsync(symbol);
             _logger.LogInformation("Getting stock ticker for symbol '{symbol}' from API", symbol);
 
-            _tickerCache.CacheStockTicker(res.Value!);
+            if (res.IsSuccess && res.Value?.ApiStatusCode == "200")
+            {
+                _tickerCache.CacheStockTicker(res.Value!);
+            }            
 
-            return Result<StockTicker>.Success(res.Value!);
+            return res;
         }
     }
 }

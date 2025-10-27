@@ -8,12 +8,14 @@ namespace AppDataModels.Utility
 {
     public class ResultError
     {
-        public ResultError(string code, string message)
+        public ResultError(string statusCode, string message, Exception? exception = null)
         {
-            Code = code;
+            StatusCode = statusCode;
             Message = message;
+            Exception = exception;
         }
-        public string Code { get; }
+        public string StatusCode { get; }
         public string Message { get; }
+        public Exception? Exception { get; set; }
     }
 }

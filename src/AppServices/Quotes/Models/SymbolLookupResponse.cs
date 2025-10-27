@@ -10,6 +10,14 @@ namespace AppServices.Quotes.Models
 {
     public class SymbolLookupResponse
     {
+        [JsonProperty(PropertyName = "count")]
+        public int Count { get; set; }
+        [JsonProperty(PropertyName = "result")]
+        public SymbolLookupResult[] Results { get; set; } = [];
+    }
+
+    public class SymbolLookupResult
+    {
         [JsonProperty(PropertyName = "symbol")]
         public required string Symbol { get; set; }
         [JsonProperty(PropertyName = "description")]
