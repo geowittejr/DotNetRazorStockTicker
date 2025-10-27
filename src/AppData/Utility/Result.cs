@@ -13,7 +13,7 @@ namespace AppDataModels.Utility
         private Result(T? value, bool isSuccess, ResultError? error)
         {
             Value = value;
-            IsSuccess = true;
+            IsSuccess = isSuccess;
             Error = error;
         }
     }

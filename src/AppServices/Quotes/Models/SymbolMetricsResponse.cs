@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,11 @@ namespace AppServices.Quotes.Models
 {
     public class SymbolMetricsResponse
     {
-        [JsonPropertyName("symbol")]
+        [JsonProperty(PropertyName = "symbol")]
         public required string Symbol { get; set; }
-        [JsonPropertyName("epsTTM")]
+        [JsonProperty(PropertyName = "epsTTM")]
         public decimal EarningsPerShare { get; set; }
-        [JsonPropertyName("peTTM")]
+        [JsonProperty(PropertyName = "peTTM")]
         public decimal PriceToEarningsRatio { get; set; }
     }
 }

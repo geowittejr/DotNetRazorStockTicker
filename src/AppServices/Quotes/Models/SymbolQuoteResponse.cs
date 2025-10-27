@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,9 @@ namespace AppServices.Quotes.Models
 {
     public class SymbolQuoteResponse
     {
-        [JsonPropertyName("symbol")]
+        [JsonProperty(PropertyName = "symbol")]
         public required string Symbol { get; set; }
-        [JsonPropertyName("c")]
+        [JsonProperty(PropertyName = "c")]
         public decimal Price { get; set; }
     }
 }

@@ -22,13 +22,36 @@ namespace AppServices
             _tickerCache = tickerCache;
         }
 
-        public async Task<Result<List<StockTicker>>> GetStockTickersAsync(List<string> stockSymbols)
+        public async Task<Result<List<StockTicker>>> GetStockTickersAsync(IEnumerable<string> stockSymbols)
         {
-            var tasks = stockSymbols.Select(symbol => GetStockTickerAsync(symbol));
+            try
+            {
+                // Start all async calls in parallel
+                var tasks = stockSymbols.Select(symbol => GetStockTickerAsync(symbol)).ToList();
 
-            var res = Task.WhenAll(tasks).ContinueWith(t => t.Result.ToList());
+                // Await completion of all tasks
+                var results = await Task.WhenAll(tasks);
 
-            return Result<List<StockTicker>>.Failure(new ResultError("500", "failed"));
+                // Separate successes and failures
+                var successfulTickers = results
+                    .Where(r => r.IsSuccess && r.Value != null)
+                    .Select(r => r.Value!)
+                    .ToList();
+
+                if (successfulTickers.Count == 0)
+                {
+                    return Result<List<StockTicker>>.Failure(
+                        new ResultError("404", "No stock tickers could be retrieved"));
+                }
+
+                return Result<List<StockTicker>>.Success(successfulTickers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching stock tickers");
+                return Result<List<StockTicker>>.Failure(
+                    new ResultError("500", $"Unexpected error: {ex.Message}"));
+            }
         }
 
         private async Task<Result<StockTicker>> GetStockTickerAsync(string symbol)

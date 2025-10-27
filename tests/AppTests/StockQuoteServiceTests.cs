@@ -8,7 +8,7 @@ namespace AppTests
     {
         public IStockQuoteService GetStockQuoteService()
         {
-            IOptions<StockQuotesOptions> options = Options.Create(new StockQuotesOptions
+            IOptions<StockQuotesApiOptions> options = Options.Create(new StockQuotesApiOptions
             {
                 ApiKey = "test-api",
                 BaseUrl = "https://test-url.com"

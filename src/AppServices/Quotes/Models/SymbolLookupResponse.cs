@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,9 @@ namespace AppServices.Quotes.Models
 {
     public class SymbolLookupResponse
     {
-        [JsonPropertyName("symbol")]
+        [JsonProperty(PropertyName = "symbol")]
         public required string Symbol { get; set; }
-        [JsonPropertyName("description")]
+        [JsonProperty(PropertyName = "description")]
         public required string CompanyName { get; set; }
     }
 }

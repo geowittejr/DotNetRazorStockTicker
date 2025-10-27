@@ -1,10 +1,83 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Razor Stock Ticker";
+}
+<h1 class="display-4">Razor Stock Ticker</h1>
+<p>Enter a space-separated list of stock symbols to view quotes</p>
+<form id="quotesForm" method="post" asp-page-handler="GetStockTickers">
+    <div class="form-group">
+        <label for="symbols">Enter stock symbols (space-separated):</label>
+        <input type="text" id="symbols" name="StockSymbolsInput" value="@Model.StockSymbolsInput" class="form-control" />
+        <button type="submit" class="btn btn-primary mt-2">Get Quotes</button>
+        <input type="hidden" id="refreshIntervalSeconds" name="RefreshIntervalSeconds" value="0"/>
+    </div>    
+</form>
+@if (Model.StockTickers.Any())
+{
+    <h3 class="mt-4">Results</h3>
+    <div class="form-group mt-2">
+        <label for="refreshIntervalDropdown">Refresh (seconds):</label>
+        <select id="refreshIntervalDropdown" name="refreshIntervalDropdown" class="form-control" onchange="setRefreshIntervalSeconds()">
+            <option value="0" selected="@((Model.RefreshIntervalSeconds == 0) ? "selected" : null)">Off</option>
+            <option value="5" selected="@((Model.RefreshIntervalSeconds == 5) ? "selected" : null)">5</option>
+            <option value="10" selected="@((Model.RefreshIntervalSeconds == 10) ? "selected" : null)">10</option>
+            <option value="30" selected="@((Model.RefreshIntervalSeconds == 30) ? "selected" : null)">30</option>
+            <option value="60" selected="@((Model.RefreshIntervalSeconds == 60) ? "selected" : null)">60</option>
+        </select>
+    </div>
+    <table class="table table-striped table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Company</th>
+                <th>Price</th>
+                <th>P/E Ratio</th>
+                <th>EPS</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticker in Model.StockTickers)
+            {
+                <tr>
+                    <td>@ticker.Symbol</td>
+                    <td>@ticker.CompanyName</td>
+                    <td>@ticker.Price</td>
+                    <td>@ticker.PriceToEarningsRatio</td>
+                    <td>@ticker.EarningsPerShare</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Scripts {
+    <script>
+        let refreshTimer = null;
+
+        function setRefreshIntervalSeconds() {
+            const dropdown = document.getElementById("refreshIntervalDropdown");
+            const refreshSeconds = parseInt(dropdown.value);
+            const timerInterval = refreshSeconds * 1000;
+
+            const refreshIntervalSeconds = document.getElementById("refreshIntervalSeconds");
+            refreshIntervalSeconds.value = refreshSeconds;
+
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+
+            if (timerInterval > 0) {
+                refreshTimer = setInterval(() => {
+                    document.getElementById("quotesForm").submit();
+                }, timerInterval);
+            }
+        }
+
+        // Initialize auto-refresh on page load (preserves setting after postback)
+        document.addEventListener("DOMContentLoaded", () => {
+            setRefreshIntervalSeconds();
+        });
+    </script>
+}

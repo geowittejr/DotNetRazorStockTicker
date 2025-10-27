@@ -12,8 +12,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
 
 // Bind StockQuotesOptions from configuration
-builder.Services.Configure<StockQuotesOptions>(
-    builder.Configuration.GetSection(StockQuotesOptions.SectionName)
+builder.Services.Configure<StockQuotesApiOptions>(
+    builder.Configuration.GetSection(StockQuotesApiOptions.SectionName)
 );
 
 // Register services

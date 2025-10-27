@@ -7,10 +7,10 @@ namespace AppServices.Caching
 {
     public class TickerCache : ITickerCache
     {
-        private readonly StockQuotesOptions _options;
+        private readonly StockQuotesApiOptions _options;
         private readonly IMemoryCache _memoryCache;
 
-        public TickerCache(IOptions<StockQuotesOptions> options, IMemoryCache memoryCache) 
+        public TickerCache(IOptions<StockQuotesApiOptions> options, IMemoryCache memoryCache) 
         { 
             _options = options.Value;
             _memoryCache = memoryCache;
