@@ -43,7 +43,7 @@ namespace AppServices.Quotes
             var stockTicker = new StockTicker
             {
                 Symbol = stockSymbol,
-                CompanyName = lookup.IsSuccess ? lookup.Value!.CompanyName : "N/A",
+                CompanyName = lookup.IsSuccess ? lookup.Value!.CompanyName : "[UNAVAILABLE]",
                 Price = quote.IsSuccess ? quote.Value!.Price : 0.00M,
                 EarningsPerShare = metrics.IsSuccess ? metrics.Value!.Metric.EarningsPerShare : 0.00M,
                 PriceToEarningsRatio = metrics.IsSuccess ? metrics.Value!.Metric.PriceToEarningsRatio : 0.00M,
