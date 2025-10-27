@@ -59,11 +59,14 @@ namespace AppServices
             var cachedTicker = _tickerCache.GetStockTicker(symbol);
             if (cachedTicker != null)
             {
-                _logger.LogInformation("Cache hit for symbol: {Symbol}", symbol);
+                _logger.LogInformation("Getting stock ticker for symbol '{symbol}' from cache", symbol);
                 return Result<StockTicker>.Success(cachedTicker);
             }
 
             var res = await _stockQuoteService.GetStockTickerAsync(symbol);
+            _logger.LogInformation("Getting stock ticker for symbol '{symbol}' from API", symbol);
+
+            _tickerCache.CacheStockTicker(res.Value!);
 
             return Result<StockTicker>.Success(res.Value!);
         }
