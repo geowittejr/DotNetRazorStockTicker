@@ -32,7 +32,7 @@ DotNetRazorStockTicker/ # The main solution
 - API key configuration via `appsettings.json`, environment variables, or secrets.json in Visual Studio   
 - Dependency injection is configured in Program.cs 
 - Unit tests (xUnit) project added
-- Caching of stock tickers using in-memory cache with a configurable TTL in appsettings.json
+- Caching of stock tickers with a configurable TTL in appsettings.json (CacheTtlSeconds)
 - Stock ticker status badges for each grid row (i.e., New, Old, Error, Rate Limit).
 - Ability to configure auto-refresh of the watched stock quotes in the UI
 - The stock symbols input textbox is seeded with 20 random stocks when running in development mode
@@ -88,7 +88,9 @@ In `src/RazorApp/appsettings.Development.json`, add:
 {
   "StockQuotesApi": {
     "BaseUrl": "https://finnhub.io/api/v1",
-    "ApiKey": "your_api_key_here"
+    "ApiKey": "your_api_key_here",
+    "CacheTtlSeconds": 60,
+    "CacheMaxExpiryMinutes": 5
   }
 }
 ```
