@@ -34,6 +34,7 @@ DotNetRazorStockTicker/ # The main solution
 - Minimal unit tests (xUnit) added
 - Caching of stock tickers using in-memory cache with a configurable TTL in appsettings.json
 - Stock ticker status badges for each grid row (i.e., New, Old, Error, Rate Limit).
+- Ability to configure auto-refresh of the watched stock quotes in the UI
 - Random list of stock symbols added to input for testing in development environment
 - ARIA attributes added to enhance accessibility
 - Mock API mode allows you to run a demo without calling the live stock quotes API
@@ -127,8 +128,8 @@ MockApiMode to "true".
 ```json
  "MockApiMode": "true"
 ```
-Then start the application and it will run in demo mode with a 
-fake stock API that mimics a live one.
+Then restart the application and it will run in demo mode with a 
+mocked stock quote API that returns fake data.
 
 ---
 
