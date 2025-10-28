@@ -4,7 +4,7 @@ This repository also includes a supporting Services class library for API integr
 
 ---
 
-## Assumptions
+## Stock Quotes API Assumptions (Using Finnhub.io)
 
 - The stock exchange code for all Finnhub symbol lookup requests is "US" for US exchanges (NYSE, Nasdaq).
 - The Finnhub "epsTTM" metric value is the last reported EPS value for a given stock symbol.
@@ -15,14 +15,15 @@ This repository also includes a supporting Services class library for API integr
 ## Project Structure
 
 ```
-DotNetRazorStockTicker/
+DotNetRazorStockTicker/ # The main solution
 │
 ├── src/
-│   ├── StockTickerRazorApp/          # Main Razor Pages application
-│   ├── StockTickerServices/ # Services library (API integration, business logic)
+│   ├── AppData/        # Class library containing data models
+│   ├── AppServices/    # Services class library
+│   ├── RazorApp/       # The main Razor pages app
 │
 ├── tests/
-│   ├── StockTickerTests/    # xUnit test project
+│   ├── AppTests/       # xUnit test project
 │
 ├── .gitignore
 ├── DotNetRazorStockTicker.sln
@@ -34,9 +35,9 @@ DotNetRazorStockTicker/
 ## Features
 
 - ASP.NET Core Razor Pages frontend  
-- Integration with a third-party Stock Ticker API  
-- Configurable API key management via `appsettings.json` or environment variables  
-- Dependency injection for modular service design  
+- Integration with the Finnhub.io Stock Quotes API  
+- API key configuration via `appsettings.json`, environment variables, or secrets.json in Visual Studio   
+- Dependency injection configured in Program.cs 
 - Unit tests (xUnit) for core business logic  
 
 ---
@@ -47,7 +48,7 @@ Make sure you have the following installed:
 
 - .NET 8 SDK
 - Visual Studio 2022 or VS Code
-- A valid API key for the stock ticker service (Finnhub)
+- A valid API key for the stock quotes API (Finnhub.io)
 
 ---
 
@@ -62,20 +63,15 @@ cd DotNetRazorStockTicker
 
 ### 2. Configure the API Key
 
-You can provide your API key in one of two ways:
+You can provide your API key in one of three ways:
 
-#### Option 1 — Environment Variable (Recommended)
+#### Option 1 — Environment Variable
 
 Set the environment variable:
 
 **Windows (PowerShell):**
 ```bash
-$env:STOCK_API_KEY = "your_api_key_here"
-```
-
-**macOS/Linux (bash):**
-```bash
-export STOCK_API_KEY="your_api_key_here"
+$env:StockQuotesApi__ApiKey = "your_api_key_here"
 ```
 
 #### Option 2 — appsettings.Development.json
@@ -83,12 +79,20 @@ export STOCK_API_KEY="your_api_key_here"
 In `src/StockTickerRazorApp/appsettings.Development.json`, add:
 ```json
 {
-  "StockApi": {
-    "BaseUrl": "https://api.example.com",
+  "StockQuotesApi": {
+    "BaseUrl": "https://finnhub.io/api/v1",
     "ApiKey": "your_api_key_here"
   }
 }
 ```
+
+#### Option 3 — secrets.json in Visual Studio
+
+Right-click on the RazorApp project in the solution explorer.
+Choose the "Manage User Secrets" menu item.
+
+Add the same ApiKey json to the secrets.json file shown above from
+the appsettings.Development.json file.
 
 Note: Do not commit your API key. Ensure it’s excluded via `.gitignore`.
 
@@ -98,57 +102,14 @@ Note: Do not commit your API key. Ensure it’s excluded via `.gitignore`.
 
 ```bash
 dotnet build
-dotnet run --project src/StockTickerRazorApp
+dotnet run --project src/RazorApp
 ```
 
 Then open your browser and navigate to:
 
 ```
-https://localhost:5001
+https://localhost:7184
 ```
-
----
-
-## Running Tests
-
-To execute the xUnit test suite:
-
-```bash
-dotnet test
-```
-
-Example output:
-
-```
-Passed!  - Failed: 0, Passed: 12, Skipped: 0, Total: 12
-```
-
----
-
-## Services Library Overview
-
-The `StockTickerServices` project includes:
-
-- `IStockTickerService` – defines the contract for fetching stock data  
-- `StockTickerService` – implements API integration and data mapping  
-- `Models/` – contains domain models used across layers  
-- `HttpClient` – registered in `Program.cs` via DI for the stock API  
-
----
-
-## Configuration Overview
-
-| Setting | Location | Description |
-|----------|-----------|-------------|
-| `StockApi:BaseUrl` | `appsettings.json` | Base URL for the 3rd-party stock ticker API |
-| `StockApi:ApiKey` | Env Var / Secret | API key for authentication |
-
----
-
-## Local Development Notes
-
-- Logs output to console with configurable log levels.  
-- Mocked services available for testing without hitting live APIs.  
 
 ---
 

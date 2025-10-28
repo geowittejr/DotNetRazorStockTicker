@@ -54,3 +54,6 @@ TestResult.xml
 nunit-*.xml
 
 /.vs
+
+# Ignore local development settings
+appsettings.Development.json
