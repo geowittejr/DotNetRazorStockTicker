@@ -4,6 +4,7 @@ using AppServices;
 using AppDataModels.DomainModels;
 using System.Runtime.CompilerServices;
 using AppDataModels.Utility;
+using AppServices.Quotes.Utility;
 
 namespace RazorApp.Pages
 {
@@ -29,8 +30,7 @@ namespace RazorApp.Pages
         public void OnGet()
         {
             // Add default values for testing
-            StockSymbolsInput = "AAPL GOOG MSFT ABBV ABT ACN ADM AEE ADSK ADT CETX CERT FWRG LVO LUXE PSO TX TWIN ZION ZLAB";
-            //StockSymbolsInput = "FFhhh AAPL";
+            StockSymbolsInput = TestDataHelper.GetRandomStockSymbols();
         }
 
         public async Task OnPostGetStockTickers()
@@ -46,32 +46,14 @@ namespace RazorApp.Pages
         {
             // Split input into symbols and remove duplicates, e.g. "AAPL MSFT GOOG"
             var symbols = StockSymbolsInput
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .ToUpper()
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)                
                 .Distinct();
 
             // Update the input string to ensure it's valid
             StockSymbolsInput = string.Join(" ", symbols);
 
             return symbols;
-        }
-
-        // Dummy methods to simulate API data
-        private string GetCompanyName(string symbol)
-        {
-            return symbol.ToUpper() switch
-            {
-                "AAPL" => "Apple Inc.",
-                "MSFT" => "Microsoft Corp.",
-                "GOOG" => "Alphabet Inc.",
-                "AMZN" => "Amazon.com Inc.",
-                _ => $"{symbol.ToUpper()} Corporation"
-            };
-        }
-
-        private decimal GetRandomDecimal(decimal min, decimal max)
-        {
-            var random = new Random();
-            return Math.Round((decimal)random.NextDouble() * (max - min) + min, 2);
         }
     }
 }

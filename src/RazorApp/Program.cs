@@ -17,9 +17,19 @@ builder.Services.Configure<StockQuotesApiOptions>(
 );
 
 // Register services
-builder.Services.AddScoped<IStockQuoteService, StockQuoteService>();
-builder.Services.AddScoped<ITickerService, TickerService>();
 builder.Services.AddScoped<ITickerCache, TickerCache>();
+
+// Use mockApiMode to demo the app without calling the real stock quotes API
+bool mockApiMode = (builder.Configuration["MockApiMode"] ?? "false") == "true";
+if (mockApiMode)
+{
+    builder.Services.AddScoped<IStockQuoteService, MockStockQuoteService>();
+}
+else
+{
+    builder.Services.AddScoped<IStockQuoteService, StockQuoteService>();
+}
+builder.Services.AddScoped<ITickerService, TickerService>();
 
 // Ensure we make IHttpClientFactory available for services that need it
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0

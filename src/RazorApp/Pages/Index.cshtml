@@ -37,7 +37,7 @@
                 <th>Price</th>
                 <th>P/E Ratio</th>
                 <th>EPS</th>
-                <th>Status</th>
+                <th style="width: 150px; white-space: nowrap;">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@
                         {
                             <span class="badge rounded-pill bg-success">New</span>
                         }
-                        @if (ticker.UpdatedStatusCode != ticker.CreatedStatusCode)
+                        @if ((!ticker.CreatedUtc.Equals(ticker.UpdatedUtc)) && ticker.CreatedStatusCode != ticker.UpdatedStatusCode)
                         {
                             <span class="badge rounded-pill bg-secondary">Old</span>
                         }
