@@ -30,7 +30,7 @@ namespace RazorApp.Pages
         {
             // Add default values for testing
             StockSymbolsInput = "AAPL GOOG MSFT ABBV ABT ACN ADM AEE ADSK ADT CETX CERT FWRG LVO LUXE PSO TX TWIN ZION ZLAB";
-            //StockSymbolsInput = "AAPL GOOG MSFT";
+            //StockSymbolsInput = "FFhhh AAPL";
         }
 
         public async Task OnPostGetStockTickers()

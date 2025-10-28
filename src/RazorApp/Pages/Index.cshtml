@@ -49,7 +49,24 @@
                     <td>@ticker.Price.ToString("C2")</td>
                     <td>@ticker.PriceToEarningsRatio.ToString("F2")</td>
                     <td>@ticker.EarningsPerShare.ToString("F2")</td>
-                    <td>@ticker.UpdatedStatusCode</td>
+                    <td>
+                        @if (ticker.UpdatedStatusCode == "200")
+                        {
+                            <span class="badge rounded-pill bg-success">New</span>
+                        }
+                        @if (ticker.UpdatedStatusCode != ticker.CreatedStatusCode)
+                        {
+                            <span class="badge rounded-pill bg-secondary">Old</span>
+                        }
+                        @if (ticker.UpdatedStatusCode != "200" && ticker.UpdatedStatusCode != "429")
+                        {
+                            <span class="badge rounded-pill bg-danger">Error</span>
+                        }
+                        @if (ticker.UpdatedStatusCode == "429")
+                        {
+                            <span class="badge rounded-pill text-dark bg-warning">Rate limit</span>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

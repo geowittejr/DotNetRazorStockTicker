@@ -85,8 +85,6 @@ namespace AppServices.Quotes
                 var resultError = response.GetResultErrorIfAny();
                 if (resultError != null)
                     return Result<SymbolLookupResult>.Failure(resultError);
-
-                result = await response.DeserializeContentAsync<SymbolLookupResponse>();
             }
             catch (Exception ex)
             {
