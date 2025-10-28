@@ -12,11 +12,13 @@ namespace RazorApp.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly ITickerService _tickerService;
+        private readonly IHostEnvironment _hostEnvironment;
 
-        public IndexModel(ILogger<IndexModel> logger, ITickerService tickerService)
+        public IndexModel(ILogger<IndexModel> logger, ITickerService tickerService, IHostEnvironment hostEnvironment)
         {
             _logger = logger;
             _tickerService = tickerService;
+            _hostEnvironment = hostEnvironment;
         }
 
         [BindProperty]
@@ -29,8 +31,11 @@ namespace RazorApp.Pages
 
         public void OnGet()
         {
-            // Add default values for testing
-            StockSymbolsInput = TestDataHelper.GetRandomStockSymbols();
+            // Add default values for testing only in development
+            if (_hostEnvironment.IsDevelopment())
+            {
+                StockSymbolsInput = TestDataHelper.GetRandomStockSymbols();
+            }
         }
 
         public async Task OnPostGetStockTickers()
