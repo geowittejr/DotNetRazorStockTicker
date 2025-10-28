@@ -1,4 +1,4 @@
-# Dot Net Razor Stock Ticker (ASP.NET Core Razor Pages)
+# ASP.NET Core Razor Stock Ticker
 A sample ASP.NET Core Razor Pages application that retrieves and displays live stock quotes using the free Finnhub.io API. This application also demonstrates the use of in-memory caching to cut down on some of the API calls. You can configure the application to run in mock API mode, which uses a fake stock quote API to demo the functionality in an offline fashion.
 
 <img width="1339" height="719" alt="image" src="https://github.com/user-attachments/assets/b34f6d83-23eb-42d6-b4fa-5c44bb87a7be" />
