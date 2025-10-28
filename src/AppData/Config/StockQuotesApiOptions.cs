@@ -12,5 +12,6 @@ namespace AppDataModels.Config
         public required string BaseUrl { get; set; }
         public required string ApiKey { get; set; }
         public int CacheTtlSeconds { get; set; } = 60;
+        public int CacheMaxExpiryMinutes { get; set; } = 10;
     }
 }

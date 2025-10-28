@@ -37,22 +37,9 @@ namespace RazorApp.Pages
         {
             var symbols = ValidateAndReturnSymbolsInput();
 
-            Result<IEnumerable<StockTicker>> res = await _tickerService.GetStockTickersAsync(symbols);
+            Result<IEnumerable<StockTicker>> tickerResults = await _tickerService.GetStockTickersAsync(symbols);
 
-            StockTickers = res.IsSuccess ? res.Value! : []; 
-
-            //foreach (var symbol in symbols)
-            //{
-                
-            //    StockTickers.Add(new StockTicker
-            //    {
-            //        Symbol = symbol.ToUpper(),
-            //        CompanyName = GetCompanyName(symbol),
-            //        Price = GetRandomDecimal(100, 400),
-            //        PriceToEarningsRatio = GetRandomDecimal(10, 35),
-            //        EarningsPerShare = GetRandomDecimal(2, 10)
-            //    });
-            //}
+            StockTickers = tickerResults.IsSuccess ? tickerResults.Value! : []; 
         }
 
         private IEnumerable<string> ValidateAndReturnSymbolsInput()

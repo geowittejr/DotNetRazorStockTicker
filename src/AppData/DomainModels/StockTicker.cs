@@ -13,6 +13,9 @@ namespace AppDataModels.DomainModels
         public decimal Price { get; set; }
         public decimal EarningsPerShare { get; set; }
         public decimal PriceToEarningsRatio { get; set; }
-        public string ApiStatusCode { get; set; } = "200";
+        public readonly DateTime CreatedUtc = DateTime.UtcNow;
+        public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+        public string CreatedStatusCode { get; set; } = "200";
+        public string UpdatedStatusCode { get; set; } = "200";
     }
 }

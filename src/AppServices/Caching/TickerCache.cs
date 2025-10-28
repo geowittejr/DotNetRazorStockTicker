@@ -21,7 +21,7 @@ namespace AppServices.Caching
             _memoryCache.Set(
                 stockTicker.Symbol, 
                 stockTicker, 
-                TimeSpan.FromSeconds(_options.CacheTtlSeconds));
+                TimeSpan.FromMinutes(_options.CacheMaxExpiryMinutes));
         }
 
         public StockTicker? GetStockTicker(string stockSymbol)

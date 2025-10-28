@@ -5,15 +5,17 @@ namespace AppDataModels.Utility
 {
     public class Result<T>
     {
-        public bool IsSuccess { get; }
+        public bool IsSuccess => Error == null;
         public T? Value { get; }
-        public ResultError? Error { get; }
-        public static Result<T> Success(T value) => new(value, true, null);
-        public static Result<T> Failure(ResultError error) => new(default(T), false, error);
-        private Result(T? value, bool isSuccess, ResultError? error)
+        public ResultError? Error { get; } = null;
+
+        // Static initialize methods
+        public static Result<T> Success(T value) => new(value, null);
+        public static Result<T> Failure(ResultError error) => new(default(T), error);
+
+        private Result(T? value, ResultError? error)
         {
             Value = value;
-            IsSuccess = isSuccess;
             Error = error;
         }
     }

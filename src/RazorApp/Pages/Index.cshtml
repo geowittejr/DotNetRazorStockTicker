@@ -1,29 +1,33 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Razor Stock Ticker";
+    ViewData["Title"] = "U.S. Market Watch";
 }
-<h1 class="display-4">Razor Stock Ticker</h1>
+<h1>U.S. Market Watch</h1>
 <form id="quotesForm" method="post" asp-page-handler="GetStockTickers">
     <div class="form-group">
         <label for="symbols">Enter stock symbols (space-separated):</label>
-        <input type="text" id="symbols" name="StockSymbolsInput" value="@Model.StockSymbolsInput" class="form-control" />
-        <button type="submit" class="btn btn-primary mt-2">Get Quotes</button>
+        <div class="input-group">
+            <input type="text" id="symbols" name="StockSymbolsInput" value="@Model.StockSymbolsInput" class="form-control" />
+            <button type="submit" class="btn btn-primary">Get Quotes</button>
+        </div>
         <input type="hidden" id="refreshIntervalSeconds" name="RefreshIntervalSeconds" value="0"/>
     </div>    
 </form>
 @if (Model.StockTickers.Any())
-{
-    <h3 class="mt-4">Results</h3>
-    <div class="form-group mt-2">
-        <label for="refreshIntervalDropdown">Refresh (seconds):</label>
-        <select id="refreshIntervalDropdown" name="refreshIntervalDropdown" class="form-control" onchange="setRefreshIntervalSeconds()">
-            <option value="0" selected="@((Model.RefreshIntervalSeconds == 0) ? "selected" : null)">Off</option>
-            <option value="5" selected="@((Model.RefreshIntervalSeconds == 5) ? "selected" : null)">5</option>
-            <option value="10" selected="@((Model.RefreshIntervalSeconds == 10) ? "selected" : null)">10</option>
-            <option value="30" selected="@((Model.RefreshIntervalSeconds == 30) ? "selected" : null)">30</option>
-            <option value="60" selected="@((Model.RefreshIntervalSeconds == 60) ? "selected" : null)">60</option>
-        </select>
+{    
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <h3 class="mt-4">Stocks</h3>
+        <div class="d-flex align-items-center form-group">
+            <label for="refreshIntervalDropdown" class="mb-0 me-2 text-nowrap small">Refresh every:</label>
+            <select id="refreshIntervalDropdown" name="refreshIntervalDropdown" class="form-control" onchange="setRefreshIntervalSeconds()">
+                <option value="0" selected="@((Model.RefreshIntervalSeconds == 0) ? "selected" : null)">Off</option>
+                <option value="5" selected="@((Model.RefreshIntervalSeconds == 5) ? "selected" : null)">5 sec</option>
+                <option value="10" selected="@((Model.RefreshIntervalSeconds == 10) ? "selected" : null)">10 sec</option>
+                <option value="30" selected="@((Model.RefreshIntervalSeconds == 30) ? "selected" : null)">30 sec</option>
+                <option value="60" selected="@((Model.RefreshIntervalSeconds == 60) ? "selected" : null)">60 sec</option>
+            </select>
+        </div>
     </div>
     <table class="table table-striped table-bordered mt-2">
         <thead>
@@ -45,7 +49,7 @@
                     <td>@ticker.Price.ToString("C2")</td>
                     <td>@ticker.PriceToEarningsRatio.ToString("F2")</td>
                     <td>@ticker.EarningsPerShare.ToString("F2")</td>
-                    <td>@ticker.ApiStatusCode</td>
+                    <td>@ticker.UpdatedStatusCode</td>
                 </tr>
             }
         </tbody>

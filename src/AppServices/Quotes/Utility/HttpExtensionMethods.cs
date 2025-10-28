@@ -21,16 +21,7 @@ namespace AppServices.Quotes.Utility
 
         public static ResultError? GetResultErrorIfAny(this HttpResponseMessage response)
         {
-            return response.StatusCode switch
-            {
-                HttpStatusCode.OK => null,
-                HttpStatusCode.BadRequest => new ResultError("400", "Bad request made to the server"),
-                HttpStatusCode.Unauthorized => new ResultError("401", "Unauthorized access to the resource"),
-                HttpStatusCode.Forbidden => new ResultError("403", "Forbidden access to the resource"),
-                HttpStatusCode.NotFound => new ResultError("404", "The resource was not found"),
-                HttpStatusCode.TooManyRequests => new ResultError("429", "Too many requests"),                
-                _ => new ResultError("500", "Internal server error occurred")
-            };
+            return HttpHelperMethods.GetResultErrorForStatusCode(response.StatusCode);
         }
     }
 }

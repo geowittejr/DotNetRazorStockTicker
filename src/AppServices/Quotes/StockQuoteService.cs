@@ -7,6 +7,7 @@ using AppServices.Quotes.Models;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using AppServices.Quotes.Utility;
+using System.Net;
 
 namespace AppServices.Quotes
 {
@@ -25,6 +26,7 @@ namespace AppServices.Quotes
             _logger = logger;
             _httpClientFactory = httpClientFactory;
         }
+
         public async Task<Result<StockTicker>> GetStockTickerAsync(string stockSymbol)
         {
             // Start all three async calls at once
@@ -40,6 +42,9 @@ namespace AppServices.Quotes
             var quote = await quoteTask;
             var metrics = await metricsTask;
 
+            // Get the status code
+            var statusCode = GetApiStatusCode(lookup, quote, metrics);
+
             var stockTicker = new StockTicker
             {
                 Symbol = stockSymbol,
@@ -47,7 +52,8 @@ namespace AppServices.Quotes
                 Price = quote.IsSuccess ? quote.Value!.Price : 0.00M,
                 EarningsPerShare = metrics.IsSuccess ? metrics.Value!.Metric.EarningsPerShare : 0.00M,
                 PriceToEarningsRatio = metrics.IsSuccess ? metrics.Value!.Metric.PriceToEarningsRatio : 0.00M,
-                ApiStatusCode = GetApiStatusCode(lookup, quote, metrics)
+                CreatedStatusCode = statusCode,
+                UpdatedStatusCode = statusCode
             };
 
             return Result<StockTicker>.Success(stockTicker);
@@ -55,12 +61,12 @@ namespace AppServices.Quotes
 
         private string GetApiStatusCode(Result<SymbolLookupResult> lookupResult, Result<SymbolQuoteResponse> quoteResult, Result<SymbolMetricsResponse> metricsResult)
         {
-            if (lookupResult.Error != null)
-                return lookupResult.Error.StatusCode;
-            if (quoteResult.Error != null)
-                return quoteResult.Error.StatusCode;
-            if (metricsResult.Error != null)
-                return metricsResult.Error.StatusCode;
+            if (!lookupResult.IsSuccess)
+                return lookupResult.Error!.StatusCode;
+            if (!quoteResult.IsSuccess)
+                return quoteResult.Error!.StatusCode;
+            if (!metricsResult.IsSuccess)
+                return metricsResult.Error!.StatusCode;
             return "200";
         }
 
@@ -68,11 +74,13 @@ namespace AppServices.Quotes
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpResponseMessage response;
+            SymbolLookupResponse result;
 
-            SymbolLookupResponse? result = null;
+            // Get the API response.
             try
             {
-                var response = await client.GetAsync($"{_options.BaseUrl}/search?q={symbol}&exchange=US&token={_options.ApiKey}");
+                response = await client.GetAsync($"{_options.BaseUrl}/search?q={symbol}&exchange=US&token={_options.ApiKey}");
                 
                 var resultError = response.GetResultErrorIfAny();
                 if (resultError != null)
@@ -83,17 +91,31 @@ namespace AppServices.Quotes
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during symbol lookup for {Symbol}", symbol);
-                return Result<SymbolLookupResult>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}", ex));
+                return Result<SymbolLookupResult>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
 
-            if (result != null && result.Count > 0)
+            // Deserialize the API response and return it.
+            try
             {
-                var resultSymbol = result.Results.FirstOrDefault(r => r.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
-                return Result<SymbolLookupResult>.Success(resultSymbol!);
+                result = await response.DeserializeContentAsync<SymbolLookupResponse>();
+
+                if (result != null && result.Count > 0)
+                {
+                    var resultSymbol = result.Results.FirstOrDefault(r => r.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
+                    return Result<SymbolLookupResult>.Success(resultSymbol!);
+                }
+                else
+                {
+                    return Result<SymbolLookupResult>.Failure(
+                        HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound)!);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Result<SymbolLookupResult>.Failure(new ResultError("404", $"Symbol lookup failed for symbol: {symbol}"));
+                _logger.LogError(ex, "Error during symbol lookup for {Symbol}", symbol);
+                return Result<SymbolLookupResult>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
         }
 
@@ -117,7 +139,8 @@ namespace AppServices.Quotes
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during quote request for {Symbol}", symbol);
-                return Result<SymbolQuoteResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}", ex));
+                return Result<SymbolQuoteResponse>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
 
             if (result != null)
@@ -127,7 +150,8 @@ namespace AppServices.Quotes
             }
             else
             {
-                return Result<SymbolQuoteResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}"));
+                return Result<SymbolQuoteResponse>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound)!);
             }
         }
 

@@ -1,22 +1,30 @@
-﻿using AppDataModels.DomainModels;
-using Microsoft.Extensions.Logging;
+﻿using AppDataModels.Config;
+using AppDataModels.DomainModels;
+using AppDataModels.Utility;
 using AppServices.Caching;
 using AppServices.Quotes;
-using AppDataModels.Utility;
+using AppServices.Quotes.Models;
+using AppServices.Quotes.Utility;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace AppServices
 {
     public class TickerService : ITickerService
     {
+        private readonly StockQuotesApiOptions _options;
         private readonly ILogger<TickerService> _logger;
         private readonly IStockQuoteService _stockQuoteService;
         private readonly ITickerCache _tickerCache;
 
         public TickerService(
+            IOptions<StockQuotesApiOptions> options,
             ILogger<TickerService> logger, 
             IStockQuoteService stockQuoteService,
             ITickerCache tickerCache) 
-        { 
+        {
+            _options = options.Value;
             _logger = logger;
             _stockQuoteService = stockQuoteService;
             _tickerCache = tickerCache;
@@ -36,30 +44,44 @@ namespace AppServices
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching stock tickers");
+                _logger.LogError(ex, "GetStockTickersAsync exception");
+
                 return Result<IEnumerable<StockTicker>>.Failure(
-                    new ResultError("500", $"Unexpected error: {ex.Message}"));
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.InternalServerError, ex)!);
             }
         }
 
         private async Task<Result<StockTicker>> GetStockTickerAsync(string symbol)
         {
             var cachedTicker = _tickerCache.GetStockTicker(symbol);
-            if (cachedTicker != null)
+
+            // If the cached ticker isn't stale, send it.
+            if(cachedTicker != null && cachedTicker.CreatedStatusCode == "200" && !StockTickerIsOutdated(cachedTicker))
             {
-                _logger.LogInformation("Getting stock ticker for symbol '{symbol}' from cache", symbol);
+                _logger.LogInformation("Return cached ticker. Symbol: {symbol}", symbol);
                 return Result<StockTicker>.Success(cachedTicker);
             }
 
-            var res = await _stockQuoteService.GetStockTickerAsync(symbol);
-            _logger.LogInformation("Getting stock ticker for symbol '{symbol}' from API", symbol);
+            // Request a new ticker from the API.
+            var apiResult = await _stockQuoteService.GetStockTickerAsync(symbol);
 
-            if (res.IsSuccess && res.Value?.ApiStatusCode == "200")
+            // Ticker request was successful or there's no cached ticker.
+            // Cache and return this one.
+            if ((apiResult.IsSuccess && apiResult.Value!.CreatedStatusCode == "200") || cachedTicker == null)
             {
-                _tickerCache.CacheStockTicker(res.Value!);
-            }            
+                _tickerCache.CacheStockTicker(apiResult.Value!);
+                return apiResult;
+            }
 
-            return res;
+            // Ticker request was not successful.
+            // Update and send the cached ticker.
+            cachedTicker.UpdatedUtc = DateTime.UtcNow;
+            cachedTicker.UpdatedStatusCode = apiResult.Value!.CreatedStatusCode;          
+
+            return Result<StockTicker>.Success(cachedTicker);
         }
+
+        private bool StockTickerIsOutdated(StockTicker ticker) =>
+            (DateTime.UtcNow - ticker.CreatedUtc).TotalSeconds > _options.CacheTtlSeconds;
     }
 }
