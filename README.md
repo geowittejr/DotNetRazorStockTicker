@@ -37,6 +37,7 @@ DotNetRazorStockTicker/ # The main solution
 - Integration with the Finnhub.io Stock Quotes API  
 - API key configuration via `appsettings.json`, environment variables, or secrets.json in Visual Studio   
 - Dependency injection configured in Program.cs 
+- Mock API Mode allows you to run a demo without calling the live stock quotes API
 - Unit tests (xUnit) for core business logic  
 
 ---
