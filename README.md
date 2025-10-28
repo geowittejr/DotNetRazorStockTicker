@@ -47,7 +47,6 @@ DotNetRazorStockTicker/ # The main solution
 Make sure you have the following installed:
 
 - .NET 8 SDK
-- Visual Studio 2022 or VS Code
 - A valid API key for the stock quotes API (Finnhub.io)
 
 ---
@@ -101,6 +100,7 @@ Note: Do not commit your API key. Ensure it’s excluded via `.gitignore`.
 ### 3. Build and Run
 
 ```bash
+dotnet restore
 dotnet build
 dotnet run --project src/RazorApp
 ```
