@@ -1,0 +1,322 @@
+{
+  "info": {
+    "_postman_id": "25d17f07-a4d4-4313-9acd-bef09484dd54",
+    "name": "Finnhub API Endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "91697"
+  },
+  "item": [
+    {
+      "name": "App Requests",
+      "item": [
+        {
+          "name": "Symbol Lookup",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "query",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/search?q=AAPL&exchange=US",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "AAPL",
+                  "description": "Query text can be symbol, name, isin, or cusip."
+                },
+                {
+                  "key": "exchange",
+                  "value": "US",
+                  "description": "Exchange limit."
+                }
+              ]
+            },
+            "description": "Search for best-matching symbols based on your query. You can input anything from symbol, security's name to ISIN and Cusip."
+          },
+          "response": [
+            {
+              "name": "successful operation",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/search?q=string&exchange=string&token=<API Key>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "string",
+                      "description": "Query text can be symbol, name, isin, or cusip."
+                    },
+                    {
+                      "key": "exchange",
+                      "value": "string",
+                      "description": "Exchange limit."
+                    },
+                    {
+                      "key": "token",
+                      "value": "<API Key>",
+                      "description": "Added as a part of security scheme: apikey"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"result\": [\n    {\n      \"description\": \"string\",\n      \"displaySymbol\": \"string\",\n      \"symbol\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"description\": \"string\",\n      \"displaySymbol\": \"string\",\n      \"symbol\": \"string\",\n      \"type\": \"string\"\n    }\n  ],\n  \"count\": 7118\n}"
+            }
+          ]
+        },
+        {
+          "name": "Quote",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "query",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/quote?symbol=AAPL",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "quote"
+              ],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "AAPL",
+                  "description": "Symbol"
+                }
+              ]
+            },
+            "description": "<p>Get real-time quote data for US stocks. Constant polling is not recommended. Use websocket if you need real-time updates.</p><p>Real-time stock prices for international markets are supported for Enterprise clients via our partner's feed. <a href=\"mailto:support@finnhub.io\">Contact Us</a> to learn more.</p>"
+          },
+          "response": [
+            {
+              "name": "successful operation",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/quote?symbol=string&token=<API Key>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "quote"
+                  ],
+                  "query": [
+                    {
+                      "key": "symbol",
+                      "value": "string",
+                      "description": "Symbol"
+                    },
+                    {
+                      "key": "token",
+                      "value": "<API Key>",
+                      "description": "Added as a part of security scheme: apikey"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"o\": 3137.9212766965425,\n  \"h\": 3836.409406578344,\n  \"l\": 321.4468229508116,\n  \"c\": 7363.141679078933,\n  \"pc\": 8076.821693938163,\n  \"d\": 3697.9578121623813,\n  \"dp\": 2833.7539675152766\n}"
+            }
+          ]
+        },
+        {
+          "name": "Basic Financials",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "query",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stock/metric?symbol=AAPL&metric=all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stock",
+                "metric"
+              ],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "AAPL",
+                  "description": "Symbol of the company: AAPL."
+                },
+                {
+                  "key": "metric",
+                  "value": "all",
+                  "description": "Metric type. Can be 1 of the following values <code>all</code>"
+                }
+              ]
+            },
+            "description": "Get company basic financials such as margin, P/E ratio, 52-week high/low etc."
+          },
+          "response": [
+            {
+              "name": "successful operation",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/stock/metric?symbol=string&metric=string&token=<API Key>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stock",
+                    "metric"
+                  ],
+                  "query": [
+                    {
+                      "key": "symbol",
+                      "value": "string",
+                      "description": "Symbol of the company: AAPL."
+                    },
+                    {
+                      "key": "metric",
+                      "value": "string",
+                      "description": "Metric type. Can be 1 of the following values <code>all</code>"
+                    },
+                    {
+                      "key": "token",
+                      "value": "<API Key>",
+                      "description": "Added as a part of security scheme: apikey"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"symbol\": \"string\",\n  \"metricType\": \"string\",\n  \"series\": {},\n  \"metric\": {}\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
