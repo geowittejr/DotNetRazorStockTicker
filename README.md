@@ -114,7 +114,7 @@ dotnet run --project src/RazorApp
 Then open your browser and navigate to:
 
 ```
-https://localhost:5250 
+http://localhost:5250 
 ```
 
 ---
