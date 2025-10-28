@@ -76,7 +76,7 @@ $env:StockQuotesApi__ApiKey = "your_api_key_here"
 
 #### Option 2 — appsettings.Development.json
 
-In `src/StockTickerRazorApp/appsettings.Development.json`, add:
+In `src/RazorApp/appsettings.Development.json`, add:
 ```json
 {
   "StockQuotesApi": {
