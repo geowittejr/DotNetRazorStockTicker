@@ -64,7 +64,7 @@ cd DotNetRazorStockTicker
 
 ### 2. Configure the API Key
 
-You can provide your API key in one of three ways:
+Register at [Finnhub.io/register](https://finnhub.io/register) to generate an API key. Then, configure your API key for the application in one of three ways:
 
 #### Option 1 — Environment Variable
 
