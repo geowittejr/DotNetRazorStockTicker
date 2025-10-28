@@ -5,14 +5,6 @@ A sample ASP.NET Core Razor Pages application that retrieves and displays live s
 
 ---
 
-## Stock Quotes API Assumptions (Using Finnhub.io)
-
-- The stock exchange code for all Finnhub symbol lookup requests is "US" for US exchanges (NYSE, Nasdaq).
-- The Finnhub "epsTTM" metric value is the last reported EPS value for a given stock symbol.
-- The Finnhub "peTTM" metric value is the last reported PE Ratio value for a given stock symbol.
-
----
-
 ## Project Structure
 
 ```
@@ -54,6 +46,14 @@ Make sure you have the following installed:
 
 - .NET 8 SDK
 - A valid API key for the stock quotes API (<a href="https://finnhub.io/register" target="_blank">Finnhub.io</a>)
+
+---
+
+## Finnhub API Assumptions
+
+- The stock exchange code for all Finnhub symbol lookup requests is "US" for US exchanges (NYSE, Nasdaq).
+- The Finnhub "epsTTM" metric value is the last reported EPS value for a given stock symbol.
+- The Finnhub "peTTM" metric value is the last reported PE Ratio value for a given stock symbol.
 
 ---
 
