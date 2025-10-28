@@ -67,7 +67,7 @@ namespace AppServices
 
             // Ticker request was successful or there's no cached ticker.
             // Cache and return this one.
-            if ((apiResult.IsSuccess && apiResult.Value!.CreatedStatusCode == "200") || cachedTicker == null)
+            if ((apiResult.Value != null && apiResult.Value.CreatedStatusCode == "200") || cachedTicker == null)
             {
                 _tickerCache.CacheStockTicker(apiResult.Value!);
                 return apiResult;

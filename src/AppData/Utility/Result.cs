@@ -5,7 +5,6 @@ namespace AppDataModels.Utility
 {
     public class Result<T>
     {
-        public bool IsSuccess => Error == null;
         public T? Value { get; }
         public ResultError? Error { get; } = null;
 

@@ -39,7 +39,7 @@ namespace RazorApp.Pages
 
             Result<IEnumerable<StockTicker>> tickerResults = await _tickerService.GetStockTickersAsync(symbols);
 
-            StockTickers = tickerResults.IsSuccess ? tickerResults.Value! : []; 
+            StockTickers = tickerResults.Value != null ? tickerResults.Value : []; 
         }
 
         private IEnumerable<string> ValidateAndReturnSymbolsInput()

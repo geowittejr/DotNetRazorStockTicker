@@ -48,10 +48,10 @@ namespace AppServices.Quotes
             var stockTicker = new StockTicker
             {
                 Symbol = stockSymbol,
-                CompanyName = lookup.IsSuccess ? lookup.Value!.CompanyName : "[UNAVAILABLE]",
-                Price = quote.IsSuccess ? quote.Value!.Price : 0.00M,
-                EarningsPerShare = metrics.IsSuccess ? metrics.Value!.Metric.EarningsPerShare : 0.00M,
-                PriceToEarningsRatio = metrics.IsSuccess ? metrics.Value!.Metric.PriceToEarningsRatio : 0.00M,
+                CompanyName = lookup.Value != null ? lookup.Value.CompanyName : "[UNAVAILABLE]",
+                Price = quote.Value != null ? quote.Value.Price : 0.00M,
+                EarningsPerShare = metrics.Value != null ? metrics.Value.Metric.EarningsPerShare : 0.00M,
+                PriceToEarningsRatio = metrics.Value != null ? metrics.Value.Metric.PriceToEarningsRatio : 0.00M,
                 CreatedStatusCode = statusCode,
                 UpdatedStatusCode = statusCode
             };
@@ -61,12 +61,12 @@ namespace AppServices.Quotes
 
         private string GetApiStatusCode(Result<SymbolLookupResult> lookupResult, Result<SymbolQuoteResponse> quoteResult, Result<SymbolMetricsResponse> metricsResult)
         {
-            if (!lookupResult.IsSuccess)
-                return lookupResult.Error!.StatusCode;
-            if (!quoteResult.IsSuccess)
-                return quoteResult.Error!.StatusCode;
-            if (!metricsResult.IsSuccess)
-                return metricsResult.Error!.StatusCode;
+            if (lookupResult.Error != null)
+                return lookupResult.Error.StatusCode;
+            if (quoteResult.Error != null)
+                return quoteResult.Error.StatusCode;
+            if (metricsResult.Error != null)
+                return metricsResult.Error.StatusCode;
             return "200";
         }
 
@@ -88,7 +88,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during symbol lookup for {Symbol}", symbol);
+                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}", symbol);
                 return Result<SymbolLookupResult>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -111,7 +111,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during symbol lookup for {Symbol}", symbol);
+                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}", symbol);
                 return Result<SymbolLookupResult>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -121,35 +121,46 @@ namespace AppServices.Quotes
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpResponseMessage response;
+            SymbolQuoteResponse result;
 
-            SymbolQuoteResponse? result = null;
+            // Get the API response.
             try
             {
-                var response = await client.GetAsync($"{_options.BaseUrl}/quote?symbol={symbol}&token={_options.ApiKey}");
-                
+                response = await client.GetAsync($"{_options.BaseUrl}/quote?symbol={symbol}&token={_options.ApiKey}");
+
                 var resultError = response.GetResultErrorIfAny();
                 if (resultError != null)
                     return Result<SymbolQuoteResponse>.Failure(resultError);
-
-                result = await response.DeserializeContentAsync<SymbolQuoteResponse>();
-
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during quote request for {Symbol}", symbol);
+                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}", symbol);
                 return Result<SymbolQuoteResponse>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
 
-            if (result != null)
+            // Deserialize the API response and return it.
+            try
             {
-                result.Symbol = symbol;
-                return Result<SymbolQuoteResponse>.Success(result);
+                result = await response.DeserializeContentAsync<SymbolQuoteResponse>();
+
+                if (result != null)
+                {
+                    result.Symbol = symbol;
+                    return Result<SymbolQuoteResponse>.Success(result);
+                }
+                else
+                {
+                    return Result<SymbolQuoteResponse>.Failure(
+                        HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound)!);
+                }
             }
-            else
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}", symbol);
                 return Result<SymbolQuoteResponse>.Failure(
-                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound)!);
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
         }
 
@@ -157,32 +168,46 @@ namespace AppServices.Quotes
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpResponseMessage response;
+            SymbolMetricsResponse result;
 
-            SymbolMetricsResponse? result = null;
+            // Get the API response.
             try
             {
-                var response = await client.GetAsync($"{_options.BaseUrl}/stock/metric?symbol={symbol}&metric=all&token={_options.ApiKey}");
+                response = await client.GetAsync($"{_options.BaseUrl}/stock/metric?symbol={symbol}&metric=all&token={_options.ApiKey}");
 
                 var resultError = response.GetResultErrorIfAny();
                 if (resultError != null)
                     return Result<SymbolMetricsResponse>.Failure(resultError);
-
-                result = await response.DeserializeContentAsync<SymbolMetricsResponse>();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during quote request for {Symbol}", symbol);
-                return Result<SymbolMetricsResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}", ex));
+                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}", symbol);
+                return Result<SymbolMetricsResponse>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
 
-            if (result != null)
+            // Deserialize the API response and return it.
+            try
             {
-                result.Metric.Symbol = symbol;
-                return Result<SymbolMetricsResponse>.Success(result);
+                result = await response.DeserializeContentAsync<SymbolMetricsResponse>();
+
+                if (result != null)
+                {
+                    result.Metric.Symbol = symbol;
+                    return Result<SymbolMetricsResponse>.Success(result);
+                }
+                else
+                {
+                    return Result<SymbolMetricsResponse>.Failure(
+                        HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound)!);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Result<SymbolMetricsResponse>.Failure(new ResultError("404", $"Quote request failed for symbol: {symbol}"));
+                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}", symbol);
+                return Result<SymbolMetricsResponse>.Failure(
+                    HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
         }
     }
