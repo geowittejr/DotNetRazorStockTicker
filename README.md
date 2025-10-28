@@ -31,7 +31,7 @@ DotNetRazorStockTicker/ # The main solution
 - Integration with the Finnhub.io Stock Quotes API  
 - API key configuration via `appsettings.json`, environment variables, or secrets.json in Visual Studio   
 - Dependency injection is configured in Program.cs 
-- Unit tests (xUnit) project added
+- Unit tests (xUnit) project added running tests with mocked StockQuoteService
 - Caching of stock tickers with a configurable TTL in appsettings.json (CacheTtlSeconds)
 - Stock ticker status badges for each grid row (i.e., New, Old, Error, Rate Limit).
 - Ability to configure auto-refresh of the watched stock quotes in the UI
