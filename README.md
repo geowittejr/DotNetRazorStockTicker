@@ -27,15 +27,15 @@ DotNetRazorStockTicker/ # The main solution
 
 ## Features
 
-- ASP.NET Core Razor Pages frontend  
+- ASP.NET Core Razor Pages
 - Integration with the Finnhub.io Stock Quotes API  
 - API key configuration via `appsettings.json`, environment variables, or secrets.json in Visual Studio   
 - Dependency injection is configured in Program.cs 
-- Minimal unit tests (xUnit) added
+- Unit tests (xUnit) project added
 - Caching of stock tickers using in-memory cache with a configurable TTL in appsettings.json
 - Stock ticker status badges for each grid row (i.e., New, Old, Error, Rate Limit).
 - Ability to configure auto-refresh of the watched stock quotes in the UI
-- Random list of stock symbols added to input for testing in development environment
+- The stock symbols input textbox is seeded with 20 random stocks when running in development mode
 - ARIA attributes added to enhance accessibility
 - Mock API mode allows you to run a demo without calling the live stock quotes API
 

@@ -29,7 +29,7 @@ namespace AppServices.Quotes
 
         public async Task<Result<StockTicker>> GetStockTickerAsync(string stockSymbol)
         {
-            // Start all three async calls at once
+            // Define the tasks necessary to get all data
             var lookupTask = LookupSymbolAsync(stockSymbol);
             var quoteTask = GetSymbolQuoteAsync(stockSymbol);
             var metricsTask = GetSymbolMetricsAsync(stockSymbol);
