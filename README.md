@@ -114,7 +114,7 @@ https://localhost:7184
 
 ---
 
-### 3. Run the App in Demo Mode
+### 4. Run the App in Demo Mode
 
 In `src/RazorApp/appsettings.Development.json`, change the value of
 MockApiMode to "true".
