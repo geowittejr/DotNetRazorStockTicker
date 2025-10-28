@@ -35,11 +35,6 @@ namespace AppServices.Quotes
             return Math.Round((decimal)random.NextDouble() * (max - min) + min, 2);
         }
 
-        private DateTime GetCreatedDateUtc()
-        {
-            return DateTime.UtcNow.Date;
-        }
-
         private string GetRandomStatusCode()
         {
             var random = new Random();

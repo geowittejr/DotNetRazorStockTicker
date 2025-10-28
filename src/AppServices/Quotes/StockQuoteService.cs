@@ -88,7 +88,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolLookupResult>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -111,7 +111,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "LookupSymbolAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolLookupResult>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -135,7 +135,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolQuoteResponse>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -158,7 +158,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "GetSymbolQuoteAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolQuoteResponse>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -182,7 +182,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolMetricsResponse>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }
@@ -205,7 +205,7 @@ namespace AppServices.Quotes
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}", symbol);
+                _logger.LogError(ex, "GetSymbolMetricsAsync error. Symbol: {Symbol}, {message}", symbol, ex.Message);
                 return Result<SymbolMetricsResponse>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.NotFound, ex)!);
             }

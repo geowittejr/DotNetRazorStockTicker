@@ -40,11 +40,13 @@ namespace AppServices
                 // Await completion of all tasks
                 var results = await Task.WhenAll(tasks);
 
+                _logger.LogInformation("Retrieved {count} stock tickers", results.Length);
+
                 return Result<IEnumerable<StockTicker>>.Success(results.Select(x => x.Value!));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetStockTickersAsync exception");
+                _logger.LogError(ex, "GetStockTickersAsync exception: {message}", ex.Message);
 
                 return Result<IEnumerable<StockTicker>>.Failure(
                     HttpHelperMethods.GetResultErrorForStatusCode(HttpStatusCode.InternalServerError, ex)!);
@@ -70,14 +72,16 @@ namespace AppServices
             if ((apiResult.Value != null && apiResult.Value.CreatedStatusCode == "200") || cachedTicker == null)
             {
                 _tickerCache.CacheStockTicker(apiResult.Value!);
+                _logger.LogInformation("Return ticker from API. Symbol: {symbol}", symbol);
                 return apiResult;
             }
 
             // Ticker request was not successful.
             // Update and send the cached ticker.
             cachedTicker.UpdatedUtc = DateTime.UtcNow;
-            cachedTicker.UpdatedStatusCode = apiResult.Value!.CreatedStatusCode;          
+            cachedTicker.UpdatedStatusCode = apiResult.Value!.CreatedStatusCode;
 
+            _logger.LogInformation("Return cached ticker. Symbol: {symbol}", symbol);
             return Result<StockTicker>.Success(cachedTicker);
         }
 
