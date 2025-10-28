@@ -38,6 +38,7 @@ DotNetRazorStockTicker/ # The main solution
 - The stock symbols input textbox is seeded with 20 random stocks when running in development mode
 - ARIA attributes added to enhance accessibility
 - Mock API mode allows you to run a demo without calling the live stock quotes API
+- Validate against the Finnhub API using this Postman collection: [Finnhub_API_Postman_Collection.json](https://github.com/geowittejr/DotNetRazorStockTicker/blob/main/Finnhub_API_Postman_Collection.json)
 
 ---
 
